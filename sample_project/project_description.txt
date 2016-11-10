@@ -1,0 +1,53 @@
+Below are the steps to execute the project and check the output.
+
+1. Create these 3 folders manually in your m/c.
+
+D:\up_w\aws_arch\input
+D:\up_w\aws_arch\output
+D:\up_w\aws_arch\backup
+
+2.) Just Import this maven project in eclipse. (There is no need of any other configurations for mule )
+
+3.) There is a file mule-examples.xml in src/main/app folder which contains 3 configurations.
+Just execute these 3 configurations one by one by uncommenting the one you want to run and commenting the other two.
+
+4.) To Run, follow below steps
+Right click on project -> Run As -> Run Configuration.
+Create the new Configuration under Java Application
+In Main Tab : 
+              a) Choose the main class as :  org.mule.MuleServer
+In the arguments tab :
+              a) In program arguments type :   -config src/main/app/mule-examples.xml
+ 	      b) In VM arguments type :        -Dlog4j.configuration=file:///${project_loc}\log4j.properties
+Apply
+Run
+
+
+Below is the working description of each configuration ----> 
+
+Configuration 1 : 
+-----------------------------------------------
+This configuration will poll the input folder every second for files in it, As soon as it finds 
+the file in input folder, it will move that file to output folder. 
+Also suppose file with name mule.txt arrives in input folder, than log message will appear in console as : Transferring file : mule.txt
+
+
+Configuration 2 : 
+-----------------------------------------------
+This configuration will poll the folder input at an interval of 5 seconds for files in it, As soon as it finds 
+the file in input folder, it will copy (not move ) that file to output folder.
+Also suppose file with name mule.txt arrives in input folder, than log message will appear in console as : Copying file : mule.txt
+
+
+
+Configuration 3 : 
+-----------------------------------------------
+This configuration will poll the folder input at an interval of 5 seconds for files in it, As soon as it finds 
+the file in input folder, 
+1) it will move that file to output folder, 
+2) also it will take a backup of the file in backup folder.
+3)  also it will move the file from input folder only when the file age is atleast .5 seconds ( to ensure the presence of complete file in case
+of big files, 
+4) It will name the backup file as filename.backup 
+5) It will name the output folder file as timestamp-filename -->al of 5 seconds for files in it, As soon as it finds 
+the file in input folder, it will copy (not move ) that file to output folder -->

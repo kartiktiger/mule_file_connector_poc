@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+
+
+<!--  Configuration 1 : This configuration will poll the folder input every second for files in it, As soon as it finds 
+the file in input folder, it will move that file to output folder -->
+	<flow name="mulefileconnectorexampleFlow1" doc:name="mulefileconnectorexampleFlow1">
+	<file:inbound-endpoint path="D:\up_w\aws_arch\input" responseTimeout="10000" doc:name="File Input"/>
+	<logger message="Transferring file : #[message.inboundProperties['originalFilename']]" 
+		level="INFO" doc:name="Logger"/>
+	<file:outbound-endpoint path="D:\up_w\aws_arch\output" responseTimeout="10000" 
+		doc:name="File Output"/>
+	</flow> 
+
+
+<!--  Configuration 2 : This configuration will poll the folder input at an interval of 5 seconds for files in it, As soon as it finds 
+the file in input folder, it will copy (not move ) that file to output folder -->
+	<!-- <file:connector name="input" autoDelete="false" pollingFrequency="5000" />
+	<file:connector name="output" outputAppend="false" />
+	<flow name="copyFile">
+		<file:inbound-endpoint connector-ref="input"
+			path="D:\up_w\aws_arch\input" />
+		<logger message="Copying file : #[message.inboundProperties['originalFilename']]" 
+		level="INFO" doc:name="Logger"/>
+		<file:outbound-endpoint connector-ref="output"
+			path="D:\up_w\aws_arch\output" />
+	</flow>
+-->
+
+<!--  Configuration 3 : This configuration will poll the folder input at an interval of 5 seconds for files in it, As soon as it finds 
+the file in input folder, 1) it will move that file to output folder, 2) also it will take a backup of the file in backup folder.
+3)  also it will move the file from input folder only when the file age is atleast .5 seconds ( to ensure the presence of complete file in case
+of big files, 4) It will name the backup file as filename.backup 5) It will name the output folder file as timestamp-filename -->
+<!--  <file:connector name="input" autoDelete="true" fileAge="500"
+		pollingFrequency="5000" />
+	<file:connector name="output" outputAppend="false" />
+
+<flow name="moveFile">
+    <file:inbound-endpoint connector-ref="input" path="D:\up_w\aws_arch\input" moveToDirectory="D:\up_w\aws_arch\backup"
+                      moveToPattern="#[message.inboundProperties['originalFilename']].backup"/>
+    <file:outbound-endpoint connector-ref="output" path="D:\up_w\aws_arch\output"
+                      outputPattern="#[function:datestamp]-#[message.inboundProperties['originalFilename']]"/>
+  </flow> -->
+
+
+</mule>
